@@ -1,4 +1,5 @@
 import cv2
+import sys
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.applications import VGG16
@@ -21,3 +22,8 @@ def build_model():
     bbox3 = Dense(4, activation='sigmoid')(bbox2)
     
     return Model(inputs=input_layer, outputs=[cl3, bbox3])
+    
+ 
+arguments = sys.argv
+weights_file_name = arguments[1]
+video_source = arguments[2]
