@@ -27,3 +27,6 @@ def build_model():
 arguments = sys.argv
 weights_file_name = arguments[1]
 video_source = arguments[2]
+
+model = build_model()
+model.load_weights(weights_file_name)
