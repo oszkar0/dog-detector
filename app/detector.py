@@ -9,7 +9,7 @@ from tensorflow.keras.layers import Input, Dense, GlobalMaxPooling2D
 
 def build_model():
     input = Input(shape=(120, 120, 3))
-    vgg16 = VGG16(include_top=False, weights=None)
+    vgg16 = VGG16(include_top=False, weights=None)(input)
     
     # classification model
     cl1 = GlobalMaxPooling2D()(vgg16)
@@ -21,7 +21,7 @@ def build_model():
     bbox2 = Dense(2048, activation='relu')(bbox1)
     bbox3 = Dense(4, activation='sigmoid')(bbox2)
     
-    return Model(inputs=input_layer, outputs=[cl3, bbox3])
+    return Model(inputs=input, outputs=[cl3, bbox3])
     
  
 arguments = sys.argv
