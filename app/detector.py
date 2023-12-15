@@ -30,3 +30,12 @@ video_source = arguments[2]
 
 model = build_model()
 model.load_weights(weights_file_name)
+
+if video_source.isdecimal():
+    video_source = int(video_source)
+elif video_source.endswith('.mp4'):
+    pass
+else:
+    print('Incorrect source')
+    exit()
+
