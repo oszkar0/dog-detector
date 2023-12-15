@@ -39,3 +39,45 @@ else:
     print('Incorrect source')
     exit()
 
+cap = cv2.VideoCapture(video_source)
+
+while cap.isOpened():
+    _, frame = cap.read()
+    resized_frame = np.expand_dims(tf.image.resize(frame, (120, 120)) / 255.0, 0)
+
+    y_hat = model.predict(resized_frame, verbose='0')
+    dog_prob = y_hat[0]
+    bbox = y_hat[1][0]
+
+    if dog_prob > 0.5:
+        cv2.rectangle(
+            frame,
+            tuple(np.multiply(bbox[:2], [frame.shape[1], frame.shape[0]]).astype(int)),
+            tuple(np.multiply(bbox[2:], [frame.shape[1], frame.shape[0]]).astype(int)),
+            (255, 0, 0), 1
+        )
+        
+        cv2.rectangle(
+            frame,
+            tuple(np.add(np.multiply(bbox[:2], [frame.shape[1], frame.shape[0]]).astype(int), [0, -30])),
+            tuple(np.add(np.multiply(bbox[:2], [frame.shape[1], frame.shape[0]]).astype(int), [80, 0])),
+            (255, 0, 0), -1
+        )
+
+        cv2.putText(
+            frame,
+            'dog',
+            tuple(np.add(np.multiply(bbox[:2], [frame.shape[1], frame.shape[0]]).astype(int), [0, -5])),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            1, (255, 255, 255), 2, cv2.LINE_AA
+        )
+
+    cv2.imshow('Dog tracker', frame)
+
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+cap.release()
+cv2.destroyAllWindows()
+
+
